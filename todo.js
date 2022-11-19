@@ -1,55 +1,59 @@
 const todoList = () => {
-    let dateToday = new Date();
-    const today = formattedDate(dateToday);
-    let all = [];
-    const add = (todoItem) => {
-      all.push(todoItem);
-    };
-    const markAsComplete = (index) => {
-      all[index].completed = true;
-    };
-  
-    const overdue = () => {
-      return all.filter((todo) => {
-        return todo.dueDate < today;
-      });
-    };
-  
-    const dueToday = () => {
-      return all.filter((todo) => {
-        return todo.dueDate === today;
-      });
-    };
-  
-    const dueLater = () => {
-      return all.filter((todo) => {
-        return todo.dueDate > today;
-      });
-    };
-  
-    // eslint-disable-next-line no-unused-vars
-    const toDisplayableList = (list) => {
-      return list
-        .map((todo) => {
-          return `[${todo.completed ? "x" : " "}] ${todo.title} ${
-            todo.dueDate !== today ? todo.dueDate : " "
-          }`.trim();
-        })
-        .join("\n");
-    };
-  
-    return {
-      all,
-      add,
-      markAsComplete,
-      overdue,
-      dueToday,
-      dueLater,
-    };
+  let all = [];
+  const add = (todoItem) => {
+    all.push(todoItem);
+  };
+  const markAsComplete = (index) => {
+    all[index].completed = true;
+  };
+
+  const overdue = () => {
+    return all.filter(
+      (item) => item.dueDate < new Date().toLocaleDateString("en-CA")
+    );
+  };
+
+  const dueToday = () => {
+    return all.filter(
+      (item) => item.dueDate === new Date().toLocaleDateString("en-CA")
+    );
+  };
+
+  const dueLater = () => {
+    return all.filter(
+      (item) => item.dueDate > new Date().toLocaleDateString("en-CA")
+    );
   };
   
-  const formattedDate = (d) => {
-    return d.toISOString().split("T")[0];
-  };
+  const toDisplayableList = (list) => {
+    var i;
+    var displayList = []
+    for (i=0;i<list.length;i++) {
+      if (list[i].completed === false) {
+        //`[ ] ${i.title} ${i.dueDate}`
+        if (list[i].dueDate===today) {
+          displayList.push(`[ ] ${list[i].title}`)
+        }
+        else {
+          displayList.push(`[ ] ${list[i].title} ${list[i].dueDate}`)
+        }
+      }
+      else {
+        // `[x] ${i.title} ${i.dueDate}`
+        if (list[i].dueDate===today) {
+          displayList.push(`[x] ${list[i].title}`)
+        }
+        else {
+          displayList.push(`[x] ${list[i].title} ${list[i].dueDate}`)
+        }          
+      }
+    }
+    
+    return displayList.join("\n");
+  }
+
   
-  module.exports = todoList;
+  return { all, add, markAsComplete, overdue, dueToday, dueLater };
+};
+
+module.exports = todoList;
